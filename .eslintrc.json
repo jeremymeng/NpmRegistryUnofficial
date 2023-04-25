@@ -1,11 +1,22 @@
 {
-  "plugins": ["@azure/azure-sdk"],
-  "extends": ["plugin:@azure/azure-sdk/azure-sdk-base"],
+  "root": true,
+  "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": { "project": ["./tsconfig.json"] },
+  "plugins": [
+      "@typescript-eslint"
+  ],
   "rules": {
-    "@azure/azure-sdk/ts-modules-only-named": "warn",
-    "@azure/azure-sdk/ts-apiextractor-json-types": "warn",
-    "@azure/azure-sdk/ts-package-json-types": "warn",
-    "@azure/azure-sdk/ts-package-json-engine-is-present": "warn",
-    "tsdoc/syntax": "warn"
-  }
+      "@typescript-eslint/strict-boolean-expressions": [
+          2,
+          {
+              "allowString" : false,
+              "allowNumber" : false
+          }
+      ]
+  },
+  "ignorePatterns": []
 }
