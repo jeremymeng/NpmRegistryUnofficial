@@ -2,7 +2,11 @@
 // Licensed under the MIT license.
 
 import { HttpResponse } from "@azure-rest/core-client";
-import { PackageOutput, PackageVersionOutput, Output } from "./outputModels";
+import {
+  PackageOutput,
+  PackageVersionOutput,
+  SearchResultOutput,
+} from "./outputModels";
 
 /** The request has succeeded. */
 export interface GetPackage200Response extends HttpResponse {
@@ -19,5 +23,5 @@ export interface GetPackageVersion200Response extends HttpResponse {
 /** The request has succeeded. */
 export interface Search200Response extends HttpResponse {
   status: "200";
-  body: Output;
+  body: SearchResultOutput;
 }

@@ -79,3 +79,9 @@ export interface ScoreDetailOutput {
   popularity: number;
   maintenance: number;
 }
+
+export interface SearchResultOutput {
+  objects: Array<PackageSearchResultOutput>;
+  total: number;
+  time: string;
+}
