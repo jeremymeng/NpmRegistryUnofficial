@@ -65,6 +65,12 @@ export interface DistOutput {
   tarball: string;
 }
 
+export interface SearchResultOutput {
+  objects: Array<PackageSearchResultOutput>;
+  total: number;
+  time: string;
+}
+
 export interface PackageSearchResultOutput extends PackageOutput {
   score: SearchResultScoreOutput;
 }
@@ -78,10 +84,4 @@ export interface ScoreDetailOutput {
   quality: number;
   popularity: number;
   maintenance: number;
-}
-
-export interface SearchResultOutput {
-  objects: Array<PackageSearchResultOutput>;
-  total: number;
-  time: string;
 }

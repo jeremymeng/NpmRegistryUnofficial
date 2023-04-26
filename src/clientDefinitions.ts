@@ -8,19 +8,25 @@ import {
 } from "./parameters";
 import {
   GetPackage200Response,
+  GetPackage404Response,
   GetPackageVersion200Response,
+  GetPackageVersion404Response,
   Search200Response,
 } from "./responses";
 import { Client, StreamableMethod } from "@azure-rest/core-client";
 
 export interface GetPackage {
-  get(options?: GetPackageParameters): StreamableMethod<GetPackage200Response>;
+  get(
+    options?: GetPackageParameters
+  ): StreamableMethod<GetPackage200Response | GetPackage404Response>;
 }
 
 export interface GetPackageVersion {
   get(
     options?: GetPackageVersionParameters
-  ): StreamableMethod<GetPackageVersion200Response>;
+  ): StreamableMethod<
+    GetPackageVersion200Response | GetPackageVersion404Response
+  >;
 }
 
 export interface Search {

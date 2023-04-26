@@ -14,10 +14,20 @@ export interface GetPackage200Response extends HttpResponse {
   body: PackageOutput;
 }
 
+/** The server cannot find the requested resource. */
+export interface GetPackage404Response extends HttpResponse {
+  status: "404";
+}
+
 /** The request has succeeded. */
 export interface GetPackageVersion200Response extends HttpResponse {
   status: "200";
   body: PackageVersionOutput;
+}
+
+/** The server cannot find the requested resource. */
+export interface GetPackageVersion404Response extends HttpResponse {
+  status: "404";
 }
 
 /** The request has succeeded. */
