@@ -22,6 +22,11 @@ export interface DistTagOutput extends Record<string, unknown> {
   beta?: string;
 }
 
+export interface PackageTimeOutput extends Record<string, unknown> {
+  created: string;
+  modified: string;
+}
+
 export interface PackageVersionOutput {
   name: string;
   version: string;
@@ -58,11 +63,6 @@ export interface AuthorOutput {
 export interface DistOutput {
   shasum: string;
   tarball: string;
-}
-
-export interface PackageTimeOutput {
-  created: string;
-  modified: string;
 }
 
 export interface PackageSearchResultOutput extends PackageOutput {
