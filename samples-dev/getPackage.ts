@@ -1,51 +1,13 @@
 import { HttpResponse } from "@azure-rest/core-client";
-import NpmRegistryUnofficialClient, { GetPackage200Response } from "../src/index";
+import NpmRegistryUnofficialClient, {
+  GetPackage200Response,
+  GetPackage404Response,
+  GetPackageVersion200Response,
+  GetPackageVersion404Response,
+} from "../src/index";
 import moment from "moment";
 import { RawHttpHeaders } from "@azure/core-rest-pipeline";
-
-const dependents = [
-  "@azure/storage-blob",
-  "@azure/app-configuration",
-  // "@azure/storage-queue",
-  // "azure-iothub",
-  // "@azure/storage-file-share",
-  // "@azure/search-documents",
-  // "@azure/storage-file-datalake",
-  // "oav",
-  // "@microsoft/teamsfx-api",
-  // "@azure/digital-twins-core",
-  // "fx-api",
-  // "azure-iot-provisioning-service",
-  // "@azure/communication-signaling",
-  // "@azure/communication-sms",
-  // "@azure/mixed-reality-authentication",
-  // "@microsoft/teamsfx-cli",
-  // "dw-autorest-typescript",
-  // "@azure/core-arm",
-  // "azure-iot-provisioning-service-with-proxy",
-  // "autorest-typescript",
-  // "@autorest/typescript",
-  // "dw-typescript-codegen",
-  // "@azure/mixedreality-authentication",
-  // "@azure/opentelemetry-exporter-azure-monitor",
-  // "@autorest/azure-functions-typescript",
-  // "@azure/communication-network-traversal",
-  // "@azure/digitaltwins",
-  // "@azure/iot-device-update",
-  // "@azure/ai-metrics-advisor",
-  // "@azure/quantum-jobs",
-  // "teamsdev-client",
-  // "microsoft.marketplace.metering",
-  // "@azure/ai-anomaly-detector",
-  // "@wipefest/api-sdk",
-  // "@audc/applicationinsights",
-  // "@cloudgraph/cg-provider-azure",
-  // "@azure/communication-administration",
-  // "@azure/digital-twins",
-  // "@azure/search",
-  // "@azure/storage-blob-changefeed",
-  // "@azure/synapse-monitoring",
-];
+import { dependents } from "./dependents-data";
 
 export interface ErrorResponseOutput {
   code: string;
@@ -58,21 +20,40 @@ export interface DefaultResponse extends HttpResponse {
 }
 
 export function isUnexpected(
-  response: GetPackage200Response | DefaultResponse
-): response is DefaultResponse {
+  response: GetPackage200Response | GetPackage404Response | DefaultResponse
+): response is DefaultResponse;
+export function isUnexpected(
+  response:
+    | GetPackageVersion200Response
+    | GetPackageVersion404Response
+    | DefaultResponse
+): response is DefaultResponse;
+export function isUnexpected(
+  response:
+    | GetPackage200Response
+    | GetPackage404Response
+    | GetPackageVersion200Response
+    | GetPackageVersion404Response
+    | DefaultResponse
+) {
   return response.status !== "200";
 }
-
 async function main() {
   const client = NpmRegistryUnofficialClient();
-  
+  client.pipeline.removePolicy({ name: "ApiVersionPolicy" });
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
   for (const d of dependents) {
     const result = await client.path("/{name}", d).get();
-  
+
     if (isUnexpected(result)) {
-      throw `(${result.status} - ${result.body.code}) ${result.body.message}` ;
+      throw `(${result.status} - ${result.body.code}) ${result.body.message}`;
     }
-  
+
+    if (result.status === "404") {
+      console.log(`${d} not found`);
+      continue;
+    }
+
     const { body } = result;
     const { _id: id, name, description, repository, author } = body;
     const latest = body["dist-tags"].latest;
@@ -81,12 +62,26 @@ async function main() {
       latestUpdated = body.time![latest] as string;
     }
     const p = {
-      id, name, description, repository, author,
+      id,
+      name,
+      description,
+      repository,
+      author,
       latestUpdated,
     };
-    // console.dir({ name, author: author?.name ?? "N/A", lastUpdated: moment(p.latestUpdated).fromNow() });
-    console.log(name, ",", author?.name ?? "N/A", ",", moment(p.latestUpdated).fromNow())
+    console.log(
+      `${name}, ${author?.name ?? "N/A"}, ${p.latestUpdated}, ${moment(p.latestUpdated).fromNow(), p.repository?.url ?? "N/A"}`
+    );
+    await sleep(1000);
   }
+
+  // const versioned = await client
+  //   .path("/{name}/{version}", "azure-sb", "latest")
+  //   .get();
+  // if (isUnexpected(versioned)) {
+  //   throw `(${versioned.status} - ${versioned.body.code}) ${versioned.body.message}`;
+  // }
+  // console.dir(versioned);
 }
 
 main().catch(console.error);
