@@ -1,0 +1,6 @@
+**/dist-esm/
+**/node_modules/
+**/types/
+yarn.lock
+**/temp/
+**/@typespec/openapi3
