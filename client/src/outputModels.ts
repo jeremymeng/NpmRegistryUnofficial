@@ -1,6 +1,20 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+export interface MetaOutput {
+  db_name: string;
+  doc_count: number;
+  doc_del_count: number;
+  update_seq: number;
+  purge_seq: number;
+  compact_running: boolean;
+  disk_size: number;
+  data_size: number;
+  instance_start_time: number;
+  disk_format_version: number;
+  committed_update_seq: number;
+}
+
 export interface PackageOutput {
   _id: string;
   _rev: string;
@@ -55,14 +69,18 @@ export interface RepositoryOutput {
 export interface ObjectOutput {}
 
 export interface AuthorOutput {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   url?: string;
 }
 
 export interface DistOutput {
+  integrity: string;
   shasum: string;
   tarball: string;
+  fileCount: number;
+  unpackedSize: number;
+  "npm-signature": string;
 }
 
 export interface SearchResultOutput {
@@ -71,8 +89,35 @@ export interface SearchResultOutput {
   time: string;
 }
 
-export interface PackageSearchResultOutput extends PackageOutput {
+export interface PackageSearchResultOutput {
+  package: PackageSearchResultInfoOutput;
   score: SearchResultScoreOutput;
+  searchScore: number;
+}
+
+export interface PackageSearchResultInfoOutput {
+  name: string;
+  scope: string;
+  version: string;
+  description: string;
+  keywords: string[];
+  date: string;
+  links: LinksOutput;
+  author: AuthorOutput;
+  publisher: UserOutput;
+  maintainers: Array<UserOutput>;
+}
+
+export interface LinksOutput {
+  npm: string;
+  homepage?: string;
+  repository?: string;
+  bugs?: string;
+}
+
+export interface UserOutput {
+  username: string;
+  email: string;
 }
 
 export interface SearchResultScoreOutput {

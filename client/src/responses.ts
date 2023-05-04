@@ -3,10 +3,17 @@
 
 import { HttpResponse } from "@azure-rest/core-client";
 import {
+  MetaOutput,
   PackageOutput,
   PackageVersionOutput,
   SearchResultOutput,
 } from "./outputModels";
+
+/** The request has succeeded. */
+export interface GetMetadata200Response extends HttpResponse {
+  status: "200";
+  body: MetaOutput;
+}
 
 /** The request has succeeded. */
 export interface GetPackage200Response extends HttpResponse {

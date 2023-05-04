@@ -2,11 +2,13 @@
 // Licensed under the MIT license.
 
 import {
+  GetMetadataParameters,
   GetPackageParameters,
   GetPackageVersionParameters,
   SearchParameters,
 } from "./parameters";
 import {
+  GetMetadata200Response,
   GetPackage200Response,
   GetPackage404Response,
   GetPackageVersion200Response,
@@ -14,6 +16,12 @@ import {
   Search200Response,
 } from "./responses";
 import { Client, StreamableMethod } from "@azure-rest/core-client";
+
+export interface GetMetadata {
+  get(
+    options?: GetMetadataParameters
+  ): StreamableMethod<GetMetadata200Response>;
+}
 
 export interface GetPackage {
   get(
@@ -34,6 +42,8 @@ export interface Search {
 }
 
 export interface Routes {
+  /** Resource for '/' has methods for the following verbs: get */
+  (path: "/"): GetMetadata;
   /** Resource for '/\{name\}' has methods for the following verbs: get */
   (path: "/{name}", name: string): GetPackage;
   /** Resource for '/\{name\}/\{version\}' has methods for the following verbs: get */

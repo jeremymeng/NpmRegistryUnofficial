@@ -3,6 +3,7 @@
 
 import { RequestParameters } from "@azure-rest/core-client";
 
+export type GetMetadataParameters = RequestParameters;
 export type GetPackageParameters = RequestParameters;
 export type GetPackageVersionParameters = RequestParameters;
 
