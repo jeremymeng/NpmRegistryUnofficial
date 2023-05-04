@@ -9,5 +9,8 @@
     "@typespec/openapi3": "latest",
     "@azure-tools/typespec-ts": "latest"
   },
+  "scripts": {
+    "compile": "tsp compile . --output-dir=../client"
+  },
   "private": true
 }
