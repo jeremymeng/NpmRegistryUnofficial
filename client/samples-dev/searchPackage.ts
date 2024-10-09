@@ -1,7 +1,7 @@
 import { HttpResponse } from "@azure-rest/core-client";
 import NpmRegistryUnofficialClient, {
   Search200Response,
-} from "../src/index";
+} from "../src/index.js";
 import { RawHttpHeaders } from "@azure/core-rest-pipeline";
 
 export interface ErrorResponseOutput {

@@ -29,8 +29,8 @@ async function main() {
     }
     console.log(`page ${counter + 1} - ${all.length}`);
 
-    // hasNextPage = response.bodyAsText?.includes("Next Page</a>") ?? false;
-    hasNextPage = false;
+    hasNextPage = response.bodyAsText?.includes("Next Page</a>") ?? false;
+    //hasNextPage = false;
     counter++;
     await sleep(1000);
   }

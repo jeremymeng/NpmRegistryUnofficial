@@ -1,7 +1,24 @@
 {
-  "extends": "./tsconfig.package",
   "compilerOptions": {
-    "outDir": "./dist-esm",
+    "target": "es2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": [],
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSources": true,
+    "sourceMap": true,
+    "importHelpers": true,
+    "strict": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "outDir": "./dist",
     "declarationDir": "./types",
     "paths": {
       "@jeremymeng/npm-registry-unofficial": ["./src/index"]

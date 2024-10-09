@@ -13,9 +13,9 @@ import { StreamableMethod } from '@azure-rest/core-client';
 // @public (undocumented)
 export interface AuthorOutput {
     // (undocumented)
-    email: string;
+    email?: string;
     // (undocumented)
-    name: string;
+    name?: string;
     // (undocumented)
     url?: string;
 }
@@ -27,9 +27,17 @@ export default createClient;
 // @public (undocumented)
 export interface DistOutput {
     // (undocumented)
+    "npm-signature": string;
+    // (undocumented)
+    fileCount: number;
+    // (undocumented)
+    integrity: string;
+    // (undocumented)
     shasum: string;
     // (undocumented)
     tarball: string;
+    // (undocumented)
+    unpackedSize: number;
 }
 
 // @public (undocumented)
@@ -45,9 +53,26 @@ export interface DistTagOutput extends Record<string, unknown> {
 }
 
 // @public (undocumented)
+export interface GetMetadata {
+    // (undocumented)
+    get(options?: GetMetadataParameters): StreamableMethod<GetMetadata200Response>;
+}
+
+// @public
+export interface GetMetadata200Response extends HttpResponse {
+    // (undocumented)
+    body: MetaOutput;
+    // (undocumented)
+    status: "200";
+}
+
+// @public (undocumented)
+export type GetMetadataParameters = RequestParameters;
+
+// @public (undocumented)
 export interface GetPackage {
     // (undocumented)
-    get(options?: GetPackageParameters): StreamableMethod<GetPackage200Response>;
+    get(options?: GetPackageParameters): StreamableMethod<GetPackage200Response | GetPackage404Response>;
 }
 
 // @public
@@ -58,13 +83,19 @@ export interface GetPackage200Response extends HttpResponse {
     status: "200";
 }
 
+// @public
+export interface GetPackage404Response extends HttpResponse {
+    // (undocumented)
+    status: "404";
+}
+
 // @public (undocumented)
 export type GetPackageParameters = RequestParameters;
 
 // @public (undocumented)
 export interface GetPackageVersion {
     // (undocumented)
-    get(options?: GetPackageVersionParameters): StreamableMethod<GetPackageVersion200Response>;
+    get(options?: GetPackageVersionParameters): StreamableMethod<GetPackageVersion200Response | GetPackageVersion404Response>;
 }
 
 // @public
@@ -75,8 +106,52 @@ export interface GetPackageVersion200Response extends HttpResponse {
     status: "200";
 }
 
+// @public
+export interface GetPackageVersion404Response extends HttpResponse {
+    // (undocumented)
+    status: "404";
+}
+
 // @public (undocumented)
 export type GetPackageVersionParameters = RequestParameters;
+
+// @public (undocumented)
+export interface LinksOutput {
+    // (undocumented)
+    bugs?: string;
+    // (undocumented)
+    homepage?: string;
+    // (undocumented)
+    npm: string;
+    // (undocumented)
+    repository?: string;
+}
+
+// @public (undocumented)
+export interface MetaOutput {
+    // (undocumented)
+    committed_update_seq: number;
+    // (undocumented)
+    compact_running: boolean;
+    // (undocumented)
+    data_size: number;
+    // (undocumented)
+    db_name: string;
+    // (undocumented)
+    disk_format_version: number;
+    // (undocumented)
+    disk_size: number;
+    // (undocumented)
+    doc_count: number;
+    // (undocumented)
+    doc_del_count: number;
+    // (undocumented)
+    instance_start_time: number;
+    // (undocumented)
+    purge_seq: number;
+    // (undocumented)
+    update_seq: number;
+}
 
 // @public (undocumented)
 export type NpmRegistryUnofficialClient = Client & {
@@ -114,13 +189,41 @@ export interface PackageOutput {
 }
 
 // @public (undocumented)
-export interface PackageSearchResultOutput extends PackageOutput {
+export interface PackageSearchResultInfoOutput {
     // (undocumented)
-    score: SearchResultScoreOutput;
+    author: AuthorOutput;
+    // (undocumented)
+    date: string;
+    // (undocumented)
+    description: string;
+    // (undocumented)
+    keywords: string[];
+    // (undocumented)
+    links: LinksOutput;
+    // (undocumented)
+    maintainers: Array<UserOutput>;
+    // (undocumented)
+    name: string;
+    // (undocumented)
+    publisher: UserOutput;
+    // (undocumented)
+    scope: string;
+    // (undocumented)
+    version: string;
 }
 
 // @public (undocumented)
-export interface PackageTimeOutput {
+export interface PackageSearchResultOutput {
+    // (undocumented)
+    package: PackageSearchResultInfoOutput;
+    // (undocumented)
+    score: SearchResultScoreOutput;
+    // (undocumented)
+    searchScore: number;
+}
+
+// @public (undocumented)
+export interface PackageTimeOutput extends Record<string, unknown> {
     // (undocumented)
     created: string;
     // (undocumented)
@@ -175,6 +278,7 @@ export interface RepositoryOutput {
 
 // @public (undocumented)
 export interface Routes {
+    (path: "/"): GetMetadata;
     (path: "/{name}", name: string): GetPackage;
     (path: "/{name}/{version}", name: string, version: string): GetPackageVersion;
     (path: "/-/v1/search"): Search;
@@ -245,6 +349,14 @@ export interface SearchResultScoreOutput {
     detail: ScoreDetailOutput;
     // (undocumented)
     final: number;
+}
+
+// @public (undocumented)
+export interface UserOutput {
+    // (undocumented)
+    email: string;
+    // (undocumented)
+    username: string;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -4,10 +4,10 @@ import NpmRegistryUnofficialClient, {
   GetPackage404Response,
   GetPackageVersion200Response,
   GetPackageVersion404Response,
-} from "../src/index";
+} from "../src/index.js";
 import moment from "moment";
 import { RawHttpHeaders } from "@azure/core-rest-pipeline";
-import { dependents } from "./dependents-data";
+import { dependents } from "./dependents-data.js";
 
 export interface ErrorResponseOutput {
   code: string;
