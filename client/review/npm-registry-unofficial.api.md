@@ -4,14 +4,12 @@
 
 ```ts
 
-import { Client } from '@azure-rest/core-client';
-import { ClientOptions } from '@azure-rest/core-client';
-import { HttpResponse } from '@azure-rest/core-client';
-import { RequestParameters } from '@azure-rest/core-client';
-import { StreamableMethod } from '@azure-rest/core-client';
+import { ClientOptions } from '@typespec/ts-http-runtime';
+import { OperationOptions } from '@typespec/ts-http-runtime';
+import { Pipeline } from '@typespec/ts-http-runtime';
 
-// @public (undocumented)
-export interface AuthorOutput {
+// @public
+export interface Author {
     // (undocumented)
     email?: string;
     // (undocumented)
@@ -21,17 +19,13 @@ export interface AuthorOutput {
 }
 
 // @public
-function createClient(options?: ClientOptions): NpmRegistryUnofficialClient;
-export default createClient;
-
-// @public (undocumented)
-export interface DistOutput {
-    // (undocumented)
-    "npm-signature": string;
+export interface Dist {
     // (undocumented)
     fileCount: number;
     // (undocumented)
     integrity: string;
+    // (undocumented)
+    npmSignature: string;
     // (undocumented)
     shasum: string;
     // (undocumented)
@@ -40,83 +34,32 @@ export interface DistOutput {
     unpackedSize: number;
 }
 
-// @public (undocumented)
-export interface DistTagOutput extends Record<string, unknown> {
+// @public
+export interface DistTag {
     // (undocumented)
     beta?: string;
     // (undocumented)
     dev?: string;
     // (undocumented)
-    latest?: string;
+    latest: string;
     // (undocumented)
     next?: string;
 }
 
-// @public (undocumented)
-export interface GetMetadata {
-    // (undocumented)
-    get(options?: GetMetadataParameters): StreamableMethod<GetMetadata200Response>;
+// @public
+export interface GetMetadataOptionalParams extends OperationOptions {
 }
 
 // @public
-export interface GetMetadata200Response extends HttpResponse {
-    // (undocumented)
-    body: MetaOutput;
-    // (undocumented)
-    status: "200";
-}
-
-// @public (undocumented)
-export type GetMetadataParameters = RequestParameters;
-
-// @public (undocumented)
-export interface GetPackage {
-    // (undocumented)
-    get(options?: GetPackageParameters): StreamableMethod<GetPackage200Response | GetPackage404Response>;
+export interface GetPackageOptionalParams extends OperationOptions {
 }
 
 // @public
-export interface GetPackage200Response extends HttpResponse {
-    // (undocumented)
-    body: PackageOutput;
-    // (undocumented)
-    status: "200";
+export interface GetPackageVersionOptionalParams extends OperationOptions {
 }
 
 // @public
-export interface GetPackage404Response extends HttpResponse {
-    // (undocumented)
-    status: "404";
-}
-
-// @public (undocumented)
-export type GetPackageParameters = RequestParameters;
-
-// @public (undocumented)
-export interface GetPackageVersion {
-    // (undocumented)
-    get(options?: GetPackageVersionParameters): StreamableMethod<GetPackageVersion200Response | GetPackageVersion404Response>;
-}
-
-// @public
-export interface GetPackageVersion200Response extends HttpResponse {
-    // (undocumented)
-    body: PackageVersionOutput;
-    // (undocumented)
-    status: "200";
-}
-
-// @public
-export interface GetPackageVersion404Response extends HttpResponse {
-    // (undocumented)
-    status: "404";
-}
-
-// @public (undocumented)
-export type GetPackageVersionParameters = RequestParameters;
-
-// @public (undocumented)
-export interface LinksOutput {
+export interface Links {
     // (undocumented)
     bugs?: string;
     // (undocumented)
@@ -127,51 +70,60 @@ export interface LinksOutput {
     repository?: string;
 }
 
-// @public (undocumented)
-export interface MetaOutput {
+// @public
+export interface Meta {
     // (undocumented)
-    committed_update_seq: number;
+    committedUpdateSeq: number;
     // (undocumented)
-    compact_running: boolean;
+    compactRunning: boolean;
     // (undocumented)
-    data_size: number;
+    dataSize: number;
     // (undocumented)
-    db_name: string;
+    dbName: string;
     // (undocumented)
-    disk_format_version: number;
+    diskFormatVersion: number;
     // (undocumented)
-    disk_size: number;
+    diskSize: number;
     // (undocumented)
-    doc_count: number;
+    docCount: number;
     // (undocumented)
-    doc_del_count: number;
+    docDelCount: number;
     // (undocumented)
-    instance_start_time: number;
+    instanceStartTime: number;
     // (undocumented)
-    purge_seq: number;
+    purgeSeq: number;
     // (undocumented)
-    update_seq: number;
+    updateSeq: number;
 }
 
 // @public (undocumented)
-export type NpmRegistryUnofficialClient = Client & {
-    path: Routes;
-};
-
-// @public (undocumented)
-export interface ObjectOutput {
+export class NpmRegistryUnofficialClient {
+    constructor(options?: NpmRegistryUnofficialClientOptionalParams);
+    // (undocumented)
+    getMetadata(options?: GetMetadataOptionalParams): Promise<Meta>;
+    // (undocumented)
+    getPackage(name: string, options?: GetPackageOptionalParams): Promise<Package | null>;
+    // (undocumented)
+    getPackageVersion(name: string, version: string, options?: GetPackageVersionOptionalParams): Promise<PackageVersion | null>;
+    readonly pipeline: Pipeline;
+    // (undocumented)
+    search(options?: SearchOptionalParams): Promise<SearchResult>;
 }
 
-// @public (undocumented)
-export interface PackageOutput {
+// @public
+export interface NpmRegistryUnofficialClientOptionalParams extends ClientOptions {
+}
+
+// @public
+export interface Package {
     // (undocumented)
-    "dist-tags": DistTagOutput;
-    // (undocumented)
-    author?: AuthorOutput;
+    author?: Author;
     // (undocumented)
     description: string;
     // (undocumented)
-    _id: string;
+    distTags: DistTag;
+    // (undocumented)
+    id: string;
     // (undocumented)
     keywords?: string[];
     // (undocumented)
@@ -179,19 +131,29 @@ export interface PackageOutput {
     // (undocumented)
     readme: string;
     // (undocumented)
-    repository: RepositoryOutput;
+    repository?: Repository;
     // (undocumented)
-    _rev: string;
+    rev: string;
     // (undocumented)
-    time?: PackageTimeOutput;
+    time?: PackageTime;
     // (undocumented)
-    versions?: Record<string, PackageVersionOutput>;
+    versions?: Record<string, PackageVersion>;
 }
 
-// @public (undocumented)
-export interface PackageSearchResultInfoOutput {
+// @public
+export interface PackageSearchResult {
     // (undocumented)
-    author: AuthorOutput;
+    package: PackageSearchResultInfo;
+    // (undocumented)
+    score: SearchResultScore;
+    // (undocumented)
+    searchScore: number;
+}
+
+// @public
+export interface PackageSearchResultInfo {
+    // (undocumented)
+    author?: Author;
     // (undocumented)
     date: string;
     // (undocumented)
@@ -199,93 +161,75 @@ export interface PackageSearchResultInfoOutput {
     // (undocumented)
     keywords: string[];
     // (undocumented)
-    links: LinksOutput;
+    links: Links;
     // (undocumented)
-    maintainers: Array<UserOutput>;
+    maintainers: User[];
     // (undocumented)
     name: string;
     // (undocumented)
-    publisher: UserOutput;
+    publisher: User;
     // (undocumented)
     scope: string;
     // (undocumented)
     version: string;
 }
 
-// @public (undocumented)
-export interface PackageSearchResultOutput {
-    // (undocumented)
-    package: PackageSearchResultInfoOutput;
-    // (undocumented)
-    score: SearchResultScoreOutput;
-    // (undocumented)
-    searchScore: number;
-}
-
-// @public (undocumented)
-export interface PackageTimeOutput extends Record<string, unknown> {
+// @public
+export interface PackageTime extends Record<string, string> {
     // (undocumented)
     created: string;
     // (undocumented)
     modified: string;
 }
 
-// @public (undocumented)
-export interface PackageVersionOutput {
+// @public
+export interface PackageVersion {
     // (undocumented)
-    author: AuthorOutput;
+    author?: Author;
     // (undocumented)
-    dependencies: Record<string, object>;
+    dependencies?: Record<string, string>;
     // (undocumented)
     description: string;
     // (undocumented)
-    devDependencies: Record<string, object>;
+    devDependencies?: Record<string, string>;
     // (undocumented)
-    dist: DistOutput;
+    dist: Dist;
     // (undocumented)
     homepage: string;
     // (undocumented)
-    _id: string;
+    id: string;
     // (undocumented)
     license: string;
     // (undocumented)
-    maintainers: Array<AuthorOutput>;
+    maintainers?: Author[];
     // (undocumented)
     name: string;
     // (undocumented)
-    _npmUser: AuthorOutput;
+    npmUser: Author;
     // (undocumented)
-    _npmVersion: string;
+    npmVersion: string;
     // (undocumented)
     readme: string;
     // (undocumented)
     readmeFilename: string;
     // (undocumented)
-    repository: RepositoryOutput;
+    repository?: Repository | string;
     // (undocumented)
-    scripts: Record<string, object>;
+    scripts?: Record<string, string>;
     // (undocumented)
     version: string;
 }
 
-// @public (undocumented)
-export interface RepositoryOutput {
+// @public
+export interface Repository {
     // (undocumented)
     type: string;
     // (undocumented)
     url: string;
 }
 
-// @public (undocumented)
-export interface Routes {
-    (path: "/"): GetMetadata;
-    (path: "/{name}", name: string): GetPackage;
-    (path: "/{name}/{version}", name: string, version: string): GetPackageVersion;
-    (path: "/-/v1/search"): Search;
-}
-
-// @public (undocumented)
-export interface ScoreDetailOutput {
+// @public
+export interface ScoreDetail {
     // (undocumented)
     maintenance: number;
     // (undocumented)
@@ -294,33 +238,10 @@ export interface ScoreDetailOutput {
     quality: number;
 }
 
-// @public (undocumented)
-export interface Search {
-    // (undocumented)
-    get(options?: SearchParameters): StreamableMethod<Search200Response>;
-}
-
 // @public
-export interface Search200Response extends HttpResponse {
+export interface SearchOptionalParams extends OperationOptions {
     // (undocumented)
-    body: SearchResultOutput;
-    // (undocumented)
-    status: "200";
-}
-
-// @public (undocumented)
-export type SearchParameters = SearchQueryParam & RequestParameters;
-
-// @public (undocumented)
-export interface SearchQueryParam {
-    // (undocumented)
-    queryParameters?: SearchQueryParamProperties;
-}
-
-// @public (undocumented)
-export interface SearchQueryParamProperties {
-    // (undocumented)
-    from?: number;
+    fromParam?: number;
     // (undocumented)
     maintenance?: number;
     // (undocumented)
@@ -333,26 +254,26 @@ export interface SearchQueryParamProperties {
     text?: string;
 }
 
-// @public (undocumented)
-export interface SearchResultOutput {
+// @public
+export interface SearchResult {
     // (undocumented)
-    objects: Array<PackageSearchResultOutput>;
+    objects: PackageSearchResult[];
     // (undocumented)
     time: string;
     // (undocumented)
     total: number;
 }
 
-// @public (undocumented)
-export interface SearchResultScoreOutput {
+// @public
+export interface SearchResultScore {
     // (undocumented)
-    detail: ScoreDetailOutput;
+    detail: ScoreDetail;
     // (undocumented)
     final: number;
 }
 
-// @public (undocumented)
-export interface UserOutput {
+// @public
+export interface User {
     // (undocumented)
     email: string;
     // (undocumented)

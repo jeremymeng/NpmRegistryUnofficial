@@ -1,31 +1,70 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
+// Licensed under the MIT License.
 
-import { getClient, ClientOptions } from "@azure-rest/core-client";
-import { NpmRegistryUnofficialClient } from "./clientDefinitions";
+import {
+  createNpmRegistryUnofficial,
+  NpmRegistryUnofficialContext,
+  NpmRegistryUnofficialClientOptionalParams,
+  search,
+  getPackageVersion,
+  getPackage,
+  getMetadata,
+  SearchOptionalParams,
+  GetPackageVersionOptionalParams,
+  GetPackageOptionalParams,
+  GetMetadataOptionalParams,
+} from "./api/index.js";
+import {
+  Meta,
+  Package,
+  PackageVersion,
+  SearchResult,
+} from "./models/models.js";
+import { Pipeline } from "@typespec/ts-http-runtime";
 
-/**
- * Initialize a new instance of `NpmRegistryUnofficialClient`
- * @param options type: ClientOptions, the parameter for all optional parameters
- */
-export default function createClient(
-  options: ClientOptions = {}
-): NpmRegistryUnofficialClient {
-  const baseUrl = options.baseUrl ?? `https://registry.npmjs.com`;
-  options.apiVersion = options.apiVersion ?? "0.0.1";
-  const userAgentInfo = `azsdk-js-npm-registry-unofficial-rest/1.0.0-beta.1`;
-  const userAgentPrefix =
-    options.userAgentOptions && options.userAgentOptions.userAgentPrefix
-      ? `${options.userAgentOptions.userAgentPrefix} ${userAgentInfo}`
-      : `${userAgentInfo}`;
-  options = {
-    ...options,
-    userAgentOptions: {
-      userAgentPrefix,
-    },
-  };
+export { NpmRegistryUnofficialClientOptionalParams } from "./api/npmRegistryUnofficialContext.js";
 
-  const client = getClient(baseUrl, options) as NpmRegistryUnofficialClient;
+export class NpmRegistryUnofficialClient {
+  private _client: NpmRegistryUnofficialContext;
+  /** The pipeline used by this client to make requests */
+  public readonly pipeline: Pipeline;
 
-  return client;
+  /** NPM registry service */
+  constructor(options: NpmRegistryUnofficialClientOptionalParams = {}) {
+    const prefixFromOptions = options?.userAgentOptions?.userAgentPrefix;
+    const userAgentPrefix = prefixFromOptions
+      ? `${prefixFromOptions} azsdk-js-client`
+      : `azsdk-js-client`;
+    this._client = createNpmRegistryUnofficial({
+      ...options,
+      userAgentOptions: { userAgentPrefix },
+    });
+    this.pipeline = this._client.pipeline;
+  }
+
+  search(
+    options: SearchOptionalParams = { requestOptions: {} },
+  ): Promise<SearchResult> {
+    return search(this._client, options);
+  }
+
+  getPackageVersion(
+    name: string,
+    version: string,
+    options: GetPackageVersionOptionalParams = { requestOptions: {} },
+  ): Promise<PackageVersion | null> {
+    return getPackageVersion(this._client, name, version, options);
+  }
+
+  getPackage(
+    name: string,
+    options: GetPackageOptionalParams = { requestOptions: {} },
+  ): Promise<Package | null> {
+    return getPackage(this._client, name, options);
+  }
+
+  getMetadata(
+    options: GetMetadataOptionalParams = { requestOptions: {} },
+  ): Promise<Meta> {
+    return getMetadata(this._client, options);
+  }
 }

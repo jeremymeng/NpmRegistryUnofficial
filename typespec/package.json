@@ -3,14 +3,15 @@
   "version": "0.1.0",
   "type": "module",
   "dependencies": {
-    "@typespec/compiler": "latest",
-    "@typespec/http": "latest",
-    "@typespec/rest": "latest",
-    "@typespec/openapi3": "latest",
-    "@azure-tools/typespec-ts": "latest"
+    "@typespec/compiler": "0.65.0",
+    "@typespec/http": "0.65.0",
+    "@typespec/rest": "0.65.0",
+    "@typespec/versioning": "0.65.0",
+    "@azure-tools/typespec-client-generator-core": "0.51.0",
+    "@azure-tools/typespec-ts": "0.38.2"
   },
   "scripts": {
-    "compile": "tsp compile . --output-dir=../client"
+    "compile": "tsp compile ./client.tsp --output-dir=../client"
   },
   "private": true
 }

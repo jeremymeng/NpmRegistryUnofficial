@@ -5,3 +5,9 @@
 yarn.lock
 **/temp/
 **/@typespec/openapi3
+
+
+# tshy
+.tshy
+.tshy-build-tmp
+.tshy-build

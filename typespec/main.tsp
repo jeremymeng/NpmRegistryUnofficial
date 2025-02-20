@@ -1,13 +1,19 @@
 import "@typespec/rest";
+import "@azure-tools/typespec-client-generator-core";
 //import "@typespec/openapi3";
 
 using TypeSpec.Http;
+using Azure.ClientGenerator.Core;
+
 @service({
   title: "Unofficial NPM Registy Service Client",
-  version: "0.0.1",
 })
 @server("https://registry.npmjs.com", "single server endpoint")
 @doc("NPM registry service")
+@client({
+  name: "NpmRegistryUnofficialClient",
+  service: "NpmRegistryService",
+})
 namespace NpmRegistryService;
 
 model Meta {
@@ -49,11 +55,11 @@ model PackageVersion {
   name: string;
   version: string;
   homepage: string;
-  repository: Repository;
-  dependencies: Record<object>;
-  devDependencies: Record<object>;
-  scripts: Record<object>;
-  author: Author;
+  repository?: Repository | string;
+  dependencies?: Record<string>;
+  devDependencies?: Record<string>;
+  scripts?: Record<string>;
+  author?: Author;
   license: string;
   readme: string;
   readmeFilename: string;
@@ -62,10 +68,10 @@ model PackageVersion {
   dist: Dist;
   _npmVersion: string;
   _npmUser: Author;
-  maintainers: Author[];
+  maintainers?: Author[];
 }
-model DistTag extends Record<string> {
-  latest?: string;
+model DistTag {
+  latest: string;
   dev?: string;
   next?: string;
   beta?: string;
@@ -80,7 +86,7 @@ model Package {
   time?: PackageTime;
   author?: Author;
   keywords?: string[];
-  repository: Repository;
+  repository?: Repository;
   readme: string;
 }
 model ScoreDetail {
@@ -113,7 +119,7 @@ model PackageSearchResultInfo {
   keywords: string[];
   date: string;
   links: Links;
-  author: Author;
+  author?: Author;
   publisher: User;
   maintainers: User[];
 }

@@ -5,7 +5,7 @@ import {
 
 const httpClient = createDefaultHttpClient();
 const baseUrl = "https://www.npmjs.com/browse/depended/";
-const packageName = "@azure/ms-rest-js";
+const packageName = "@azure/core-http";
 const initialUrl = `${baseUrl}${packageName}`;
 const offset = 36;
 const all: string[] = [];

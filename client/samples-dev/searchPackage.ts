@@ -1,42 +1,16 @@
-import { HttpResponse } from "@azure-rest/core-client";
-import NpmRegistryUnofficialClient, {
-  Search200Response,
-} from "../src/index.js";
-import { RawHttpHeaders } from "@azure/core-rest-pipeline";
+import { NpmRegistryUnofficialClient,
+} from "../dist/esm/index.js";
 
-export interface ErrorResponseOutput {
-  code: string;
-  message: string;
-}
-export interface DefaultResponse extends HttpResponse {
-  status: string;
-  body: ErrorResponseOutput;
-  headers: RawHttpHeaders;
-}
-
-export function isUnexpected(
-  response: Search200Response | DefaultResponse
-): response is DefaultResponse {
-  return response.status !== "200";
-}
 async function main() {
-  const client = NpmRegistryUnofficialClient();
-  client.pipeline.removePolicy({ name: "ApiVersionPolicy" });
+  const client = new NpmRegistryUnofficialClient();
 
-  const response = await client.path("/-/v1/search").get({
-    queryParameters: {
-      text: "azure-storage",
-    }
+  const results = await client.search({
+    text: "@azure/ms-rest-js",
   });
-
-  if (isUnexpected(response)) {
-    throw `(${response.status} - ${response.body.code}) ${response.body.message}`;
-  }
   
-  const { body } = response;
   console.log("Search results:");
   let counter = 0;
-  for (const result of body.objects) {
+  for (const result of results.objects) {
     console.dir(result.package);
     console.dir(result.score);
     console.dir(result.searchScore);

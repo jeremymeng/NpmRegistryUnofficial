@@ -1,65 +1,26 @@
-import { HttpResponse } from "@azure-rest/core-client";
-import NpmRegistryUnofficialClient, {
-  GetPackage200Response,
-  GetPackage404Response,
-  GetPackageVersion200Response,
-  GetPackageVersion404Response,
-} from "../src/index.js";
+import  {
+  NpmRegistryUnofficialClient,
+} from "../dist/esm/index.js";
 import moment from "moment";
-import { RawHttpHeaders } from "@azure/core-rest-pipeline";
 import { dependents } from "./dependents-data.js";
 
-export interface ErrorResponseOutput {
-  code: string;
-  message: string;
-}
-export interface DefaultResponse extends HttpResponse {
-  status: string;
-  body: ErrorResponseOutput;
-  headers: RawHttpHeaders;
-}
-
-export function isUnexpected(
-  response: GetPackage200Response | GetPackage404Response | DefaultResponse
-): response is DefaultResponse;
-export function isUnexpected(
-  response:
-    | GetPackageVersion200Response
-    | GetPackageVersion404Response
-    | DefaultResponse
-): response is DefaultResponse;
-export function isUnexpected(
-  response:
-    | GetPackage200Response
-    | GetPackage404Response
-    | GetPackageVersion200Response
-    | GetPackageVersion404Response
-    | DefaultResponse
-) {
-  return response.status !== "200";
-}
 async function main() {
-  const client = NpmRegistryUnofficialClient();
+  const client = new NpmRegistryUnofficialClient();
   client.pipeline.removePolicy({ name: "ApiVersionPolicy" });
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
   for (const d of dependents) {
-    const result = await client.path("/{name}", d).get();
+    const result = await client.getPackage(d);
 
-    if (isUnexpected(result)) {
-      throw `(${result.status} - ${result.body.code}) ${result.body.message}`;
-    }
-
-    if (result.status === "404") {
+    if (!result) {
       console.log(`${d} not found`);
       continue;
     }
 
-    const { body } = result;
-    const { _id: id, name, description, repository, author } = body;
-    const latest = body["dist-tags"].latest;
+    const { id, name, description, repository, author } = result;
+    const latest = result["distTags"].latest;
     let latestUpdated = "";
     if (latest !== undefined) {
-      latestUpdated = body.time![latest] as string;
+      latestUpdated = result.time![latest] as string;
     }
     const p = {
       id,

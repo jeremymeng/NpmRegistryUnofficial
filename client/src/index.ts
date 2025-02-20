@@ -1,12 +1,27 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT license.
+// Licensed under the MIT License.
 
-import NpmRegistryUnofficialClient from "./npmRegistryUnofficialClient";
-
-export * from "./npmRegistryUnofficialClient";
-export * from "./parameters";
-export * from "./responses";
-export * from "./clientDefinitions";
-export * from "./outputModels";
-
-export default NpmRegistryUnofficialClient;
+export { NpmRegistryUnofficialClient } from "./npmRegistryUnofficialClient.js";
+export {
+  Meta,
+  Package,
+  DistTag,
+  PackageVersion,
+  Repository,
+  Author,
+  Dist,
+  PackageTime,
+  SearchResult,
+  PackageSearchResult,
+  PackageSearchResultInfo,
+  Links,
+  User,
+  SearchResultScore,
+  ScoreDetail,
+} from "./models/index.js";
+export {
+  NpmRegistryUnofficialClientOptionalParams,
+  SearchOptionalParams,
+  GetPackageVersionOptionalParams,
+  GetPackageOptionalParams,
+  GetMetadataOptionalParams,
+} from "./api/index.js";
